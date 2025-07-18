@@ -1,0 +1,68 @@
+services:
+  mongo:
+    image: mongo:noble
+    container_name: lemoncode-challenge-mongo
+    networks:
+      - lemoncode-challenge
+    volumes:
+      - lemoncode_challenge_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    environment:
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  backend:
+    build:
+      context: ./backend
+    container_name: topics-api
+    networks:
+      - lemoncode-challenge
+    environment:
+      - HOST=${BACKEND_HOST}
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_NAME=${DATABASE_NAME}
+    ports:
+      - "${BACKEND_PORT}:5000"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/topics"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: topics-frontend
+    networks:
+      - lemoncode-challenge
+    environment:
+      - API_URI=${API_URI}
+    ports:
+      - "${FRONTEND_PORT}:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+volumes:
+  lemoncode_challenge_data:
+
+networks:
+  lemoncode-challenge:
+    driver: bridge

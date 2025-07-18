@@ -73,3 +73,42 @@ docker run -d --name topics-frontend \
 #### Verification
 Confirm you can access http://localhost:8080 and that you see:
 ![Topics](../images/topics.png)
+
+## Exercice 2:
+
+Create an `.env` file from the `.env.template`. After that, the application is ready to be launched. 
+
+#### Commands guide 
+Here there is a list of useful commands to use while working with docker compose and this application.
+
+###### Launch the application
+```bash
+docker compose up
+```
+
+To run in detached mode just add `-d`.
+
+###### Check logs
+```bash
+docker compose logs -f
+```
+
+###### Stop the application
+```bash
+docker compose stop
+```
+
+###### Stop the application and removes containers and networks
+```bash
+docker compose down
+```
+
+###### Stop the application and removes containers and volumes
+```bash
+docker compose down -v
+```
+
+###### Stop the application and full clean up
+```bash
+docker compose down -v --rmi all
+```
