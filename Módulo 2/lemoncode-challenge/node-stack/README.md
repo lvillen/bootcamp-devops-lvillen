@@ -1,13 +1,17 @@
 ## Exercice 1:
 
 #### Create a lemoncode-challenge network
-`docker network create lemoncode-challenge`
+```bash
+docker network create lemoncode-challenge
+```
 
 #### Create a volume for data persistance 
-`docker volume create lemoncode_challenge_data`
+```bash
+docker volume create lemoncode_challenge_data
+```
 
 #### Start a MongoDB instance
-```
+```bash
 docker run -d \
   --name lemoncode-challenge-mongo \
   --network lemoncode-challenge \
@@ -17,7 +21,7 @@ docker run -d \
 ```
 
 #### Checking TopicstoreDB exists
-```
+```bash
 docker exec -it lemoncode-challenge-mongo mongosh
 
 use TopicstoreDB
@@ -25,7 +29,7 @@ db.Topics.find()
 ```
 
 It should return 
-```
+```bash
 [
   {
     _id: ObjectId('5fa2ca6abe7a379ec4234883'),
@@ -35,10 +39,13 @@ It should return
 ```
 
 #### Build Backend image from Dockerfile
-From the backend directory: `docker build -t backend:node .`
+From the backend directory
+```bash
+docker build -t backend:node .
+```
 
 #### Start a Backend instance
-```
+```bash
 docker run -d --name topics-api \
   --network lemoncode-challenge \
   -e HOST="0.0.0.0" \
@@ -49,10 +56,13 @@ docker run -d --name topics-api \
 ```
 
 #### Build Frontend image from Dockerfile
-From the frontend directory: `docker build -t frontend:node .`
+From the frontend directory
+```bash
+docker build -t frontend:node .
+```
 
 #### Start a Frontend instance
-```
+```bash
 docker run -d --name topics-frontend \
   --network lemoncode-challenge \
   -e API_URI="http://topics-api:5000/api/topics" \
