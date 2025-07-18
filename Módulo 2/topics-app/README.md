@@ -20,7 +20,7 @@ docker run -d \
   mongo:noble
 ```
 
-#### Checking TopicstoreDB exists
+#### Checking TopicstoreDB exists
 ```bash
 docker exec -it lemoncode-challenge-mongo mongosh
 
